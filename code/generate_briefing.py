@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""将结构化 JSON 早报数据渲染为简约浅色卡片风的单文件 HTML 网页。"""
+"""将结构化 JSON 早报数据渲染为简约浅色多栏卡片风的单文件 HTML 网页。"""
 
 from __future__ import annotations
 
@@ -33,6 +33,22 @@ def render_wechat_section(wechat_items: list[dict]) -> str:
     if not wechat_items:
         return ""
 
+    medias: list[str] = []
+    for item in wechat_items:
+        media = item.get("media", "其他")
+        if media not in medias:
+            medias.append(media)
+
+    media_buttons = [
+        f'<button class="filter-btn active" data-filter="all">全部 ({len(wechat_items)})</button>'
+    ]
+    for media in medias:
+        count = sum(1 for x in wechat_items if x.get("media") == media)
+        esc_media = html.escape(media)
+        media_buttons.append(
+            f'<button class="filter-btn" data-filter="{esc_media}">{esc_media} ({count})</button>'
+        )
+
     cards: list[str] = []
     for idx, item in enumerate(wechat_items, start=1):
         media = item.get("media", "AI 媒体")
@@ -45,11 +61,11 @@ def render_wechat_section(wechat_items: list[dict]) -> str:
             res_label = html.escape(res.get("label", "相关资料"))
             res_url = html.escape(res.get("url", "#"))
             resource_links.append(
-                f'          <a class="resource-btn" href="{res_url}" target="_blank" rel="noopener noreferrer">{res_label} ↗</a>'
+                f'            <a class="resource-btn" href="{res_url}" target="_blank" rel="noopener noreferrer">{res_label} ↗</a>'
             )
 
         resources_html = "\n".join(resource_links)
-        card = f"""        <article class="card wechat-card">
+        card = f"""        <article class="card wechat-card" data-media="{html.escape(media)}">
           <div class="card-meta">
             <div class="meta-left">
               <span class="index-num">W{idx:02d}</span>
@@ -58,7 +74,7 @@ def render_wechat_section(wechat_items: list[dict]) -> str:
             <span class="source-label">{html.escape(item.get("date", ""))}</span>
           </div>
           <h3 class="card-title">{html.escape(item.get("title", ""))}</h3>
-          <div class="section-block">
+          <div class="card-body">
             <p class="section-text">{html.escape(item.get("summary", ""))}</p>
           </div>
           <div class="card-footer">
@@ -70,13 +86,16 @@ def render_wechat_section(wechat_items: list[dict]) -> str:
         </article>"""
         cards.append(card)
 
+    buttons_joined = "\n        ".join(media_buttons)
     cards_joined = "\n\n".join(cards)
-    return f"""    <section class="wechat-section" aria-label="中文科研公众号精选">
-      <div class="section-heading">
-        <h2>中文科研公众号精选</h2>
-        <span>新智元 · 量子位 · 机器之心（附推文原文与论文/代码资料）</span>
+    return f"""    <section class="wechat-section" aria-label="中文科研公众号">
+      <div class="section-bar">
+        <h2>中文科研公众号</h2>
+        <nav class="filter-bar" data-group="wechat" aria-label="按公众号筛选">
+          {buttons_joined}
+        </nav>
       </div>
-      <div class="cards">
+      <div class="wechat-grid" id="wechat-grid">
 {cards_joined}
       </div>
     </section>"""
@@ -112,7 +131,7 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
         tag_cls = TAG_CLASS_MAP.get(cat, "tag-industry")
         url = item.get("url", "#")
         domain = item.get("domain") or urlparse(url).netloc or url
-        link_text = "访问 GitHub 仓库 ↗" if "github.com" in url else "查看原始链接 ↗"
+        link_text = "GitHub ↗" if "github.com" in url else "原文 ↗"
 
         card = f"""      <article class="card" data-category="{html.escape(cat)}">
         <div class="card-meta">
@@ -122,25 +141,22 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
           </div>
           <span class="source-label">{html.escape(item.get("source", ""))}</span>
         </div>
-        <h2 class="card-title">{html.escape(item.get("title", ""))}</h2>
-        <div class="section-block">
-          <div class="section-label">核心亮点</div>
-          <p class="section-text">{html.escape(item.get("highlight", ""))}</p>
-        </div>
-        <div class="value-box">
-          <div class="section-label">技术价值</div>
-          <p class="section-text">{html.escape(item.get("value", ""))}</p>
+        <h3 class="card-title">{html.escape(item.get("title", ""))}</h3>
+        <div class="card-body">
+          <p class="section-text"><span class="inline-label">亮点：</span>{html.escape(item.get("highlight", ""))}</p>
+          <div class="value-box">
+            <p class="section-text"><span class="inline-label">价值：</span>{html.escape(item.get("value", ""))}</p>
+          </div>
         </div>
         <div class="card-footer">
           <span class="link-domain">{html.escape(domain)}</span>
-          <a class="link-btn" href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">
-            {link_text}
-          </a>
+          <a class="link-btn" href="{html.escape(url)}" target="_blank" rel="noopener noreferrer">{link_text}</a>
         </div>
       </article>"""
         cards_html.append(card)
 
     wechat_section_html = render_wechat_section(wechat_items)
+    main_grid_class = "has-featured" if len(items) % 2 == 1 else ""
 
     template = template_path.read_text(encoding="utf-8")
     rendered = (
@@ -150,7 +166,8 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
         .replace("{{SUMMARY_LEAD}}", html.escape(data.get("summary_lead", "")))
         .replace("{{ITEM_COUNT}}", str(len(items)))
         .replace("{{WECHAT_COUNT}}", str(len(wechat_items)))
-        .replace("{{FILTER_BUTTONS}}", "\n      ".join(filter_buttons))
+        .replace("{{MAIN_GRID_CLASS}}", main_grid_class)
+        .replace("{{FILTER_BUTTONS}}", "\n        ".join(filter_buttons))
         .replace("{{CARDS_HTML}}", "\n\n".join(cards_html))
         .replace("{{WECHAT_SECTION_HTML}}", wechat_section_html)
     )
@@ -160,7 +177,7 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="生成简约浅色卡片风 AI 早报 HTML")
+    parser = argparse.ArgumentParser(description="生成简约浅色多栏卡片风 AI 早报 HTML")
     parser.add_argument("input_json", type=Path, help="输入 JSON 文件路径")
     parser.add_argument(
         "-t",
