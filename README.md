@@ -1,3 +1,7 @@
+<p align="center">
+  <strong>简体中文</strong> | <a href="./README_EN.md">English</a>
+</p>
+
 # 每日 AI 早报（Daily AI Briefing）
 
 每天早上 **08:30（Asia/Shanghai）** 自动联网搜索过去 24 小时内 AI 领域的重要动态、GitHub Trending 热门开源项目，以及 **新智元、量子位、机器之心** 等科研微信公众号的高价值推文，用大白话讲清**核心亮点**与**技术价值**，并附上推文原文链接与论文/开源仓库等相关资料链接，生成简约浅色卡片风的单文件 HTML 早报，浏览器打开即可离线阅读。
@@ -13,7 +17,8 @@
 ├── news/
 │   └── AI早报-20261124.htm    # 示例早报（仅上传 1 天用于展示，每日新增早报已通过 .gitignore 忽略）
 ├── .gitignore
-└── README.md
+├── README.md
+└── README_EN.md
 ```
 
 ## 特性
