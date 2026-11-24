@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""将结构化 JSON 早报数据渲染为简约浅色多栏卡片风的单文件 HTML 网页。"""
+"""将结构化 JSON 早报数据渲染为简约浅色炫酷多栏卡片风单文件 HTML 网页。"""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import datetime as dt
 import html
 import json
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 WEEKDAYS_CN = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
 
@@ -22,81 +22,132 @@ TAG_CLASS_MAP = {
     "工具生态": "tag-tool",
 }
 
-MEDIA_CLASS_MAP = {
-    "新智元": "media-xzy",
-    "量子位": "media-qbit",
-    "机器之心": "media-jqzx",
+MEDIA_ORDER = ["新智元", "量子位", "机器之心"]
+
+MEDIA_META = {
+    "新智元": {
+        "row_cls": "row-xzy",
+        "brand_cls": "brand-xzy",
+        "sub": "AI_era",
+        "svg": """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2.5L14.4 8.6L20.5 11L14.4 13.4L12 19.5L9.6 13.4L3.5 11L9.6 8.6L12 2.5Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="12" cy="11" r="2.2" fill="white"/>
+          <circle cx="19" cy="4.5" r="1.3" fill="white" opacity="0.85"/>
+        </svg>""",
+    },
+    "量子位": {
+        "row_cls": "row-qbit",
+        "brand_cls": "brand-qbit",
+        "sub": "QbitAI",
+        "svg": """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(-32 12 12)" stroke="white" stroke-width="1.7"/>
+          <ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(32 12 12)" stroke="white" stroke-width="1.7" opacity="0.88"/>
+          <circle cx="12" cy="12" r="2.6" fill="white"/>
+        </svg>""",
+    },
+    "机器之心": {
+        "row_cls": "row-jqzx",
+        "brand_cls": "brand-jqzx",
+        "sub": "Synced",
+        "svg": """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 20.2C12 20.2 4.2 15.3 4.2 9.4C4.2 6.6 6.4 4.5 9 4.5C10.5 4.5 11.4 5.3 12 6.3C12.6 5.3 13.5 4.5 15 4.5C17.6 4.5 19.8 6.6 19.8 9.4C19.8 15.3 12 20.2 12 20.2Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M7.5 11.2H10L11.2 8.8L12.8 13.4L14 11.2H16.5" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>""",
+    },
 }
+
+
+def build_wechat_link(media: str, title: str, wechat_url: str) -> tuple[str, str]:
+    if wechat_url and "mp.weixin.qq.com" in wechat_url:
+        return wechat_url, "微信原文 ↗"
+    query = quote(f"{media} {title[:26]}")
+    return f"https://weixin.sogou.com/weixin?type=2&query={query}", "微信原文 ↗"
 
 
 def render_wechat_section(wechat_items: list[dict]) -> str:
     if not wechat_items:
         return ""
 
-    medias: list[str] = []
+    grouped: dict[str, list[dict]] = {m: [] for m in MEDIA_ORDER}
     for item in wechat_items:
-        media = item.get("media", "其他")
-        if media not in medias:
-            medias.append(media)
+        media = item.get("media", "")
+        grouped.setdefault(media, []).append(item)
 
-    media_buttons = [
-        f'<button class="filter-btn active" data-filter="all">全部 ({len(wechat_items)})</button>'
-    ]
-    for media in medias:
-        count = sum(1 for x in wechat_items if x.get("media") == media)
-        esc_media = html.escape(media)
-        media_buttons.append(
-            f'<button class="filter-btn" data-filter="{esc_media}">{esc_media} ({count})</button>'
+    rows_html: list[str] = []
+    for media in list(grouped.keys()):
+        items = grouped[media]
+        if not items:
+            continue
+        meta = MEDIA_META.get(
+            media,
+            {
+                "row_cls": "row-xzy",
+                "brand_cls": "brand-xzy",
+                "sub": "WeChat",
+                "svg": MEDIA_META["新智元"]["svg"],
+            },
         )
 
-    cards: list[str] = []
-    for idx, item in enumerate(wechat_items, start=1):
-        media = item.get("media", "AI 媒体")
-        media_cls = MEDIA_CLASS_MAP.get(media, "media-other")
-        article_url = item.get("article_url", "#")
-        article_label = item.get("article_label") or "推文原文 ↗"
+        cards: list[str] = []
+        for item in items:
+            title = item.get("title", "")
+            summary = item.get("summary", "")
+            wx_url, wx_label = build_wechat_link(media, title, item.get("wechat_url") or item.get("article_url", ""))
 
-        resource_links: list[str] = []
-        for res in item.get("resources", []):
-            res_label = html.escape(res.get("label", "相关资料"))
-            res_url = html.escape(res.get("url", "#"))
-            resource_links.append(
-                f'            <a class="resource-btn" href="{res_url}" target="_blank" rel="noopener noreferrer">{res_label} ↗</a>'
-            )
+            extra_links: list[str] = []
+            # 若 article_url 非微信域名，则作为“同步报道”附在相关资料区
+            article_url = item.get("article_url", "")
+            if article_url and "mp.weixin.qq.com" not in article_url and article_url != wx_url:
+                extra_links.append(
+                    f'              <a class="resource-btn" href="{html.escape(article_url)}" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>'
+                )
 
-        resources_html = "\n".join(resource_links)
-        card = f"""        <article class="card wechat-card" data-media="{html.escape(media)}">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W{idx:02d}</span>
-              <span class="tag {media_cls}">{html.escape(media)}</span>
+            for res in item.get("resources", []):
+                res_label = html.escape(res.get("label", "相关资料"))
+                res_url = html.escape(res.get("url", "#"))
+                extra_links.append(
+                    f'              <a class="resource-btn" href="{res_url}" target="_blank" rel="noopener noreferrer">{res_label} ↗</a>'
+                )
+
+            extra_html = "\n".join(extra_links)
+            card = f"""          <article class="wechat-card">
+            <h3 class="wechat-title">{html.escape(title)}</h3>
+            <p class="wechat-summary">{html.escape(summary)}</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="{html.escape(wx_url)}" target="_blank" rel="noopener noreferrer">{html.escape(wx_label)}</a>
+{extra_html}
+              </div>
             </div>
-            <span class="source-label">{html.escape(item.get("date", ""))}</span>
-          </div>
-          <h3 class="card-title">{html.escape(item.get("title", ""))}</h3>
-          <div class="card-body">
-            <p class="section-text">{html.escape(item.get("summary", ""))}</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="{html.escape(article_url)}" target="_blank" rel="noopener noreferrer">{html.escape(article_label)}</a>
-{resources_html}
-            </div>
-          </div>
-        </article>"""
-        cards.append(card)
+          </article>"""
+            cards.append(card)
 
-    buttons_joined = "\n        ".join(media_buttons)
-    cards_joined = "\n\n".join(cards)
-    return f"""    <section class="wechat-section" aria-label="中文科研公众号">
-      <div class="section-bar">
-        <h2>中文科研公众号</h2>
-        <nav class="filter-bar" data-group="wechat" aria-label="按公众号筛选">
-          {buttons_joined}
-        </nav>
-      </div>
-      <div class="wechat-grid" id="wechat-grid">
+        cards_joined = "\n".join(cards)
+        row = f"""        <div class="media-row {meta['row_cls']}">
+          <div class="media-brand {meta['brand_cls']}">
+            <div class="media-logo">{meta['svg']}</div>
+            <div>
+              <div class="media-name">{html.escape(media)}</div>
+              <div class="media-sub">{meta['sub']}</div>
+            </div>
+            <span class="media-count">{len(items)} 篇</span>
+          </div>
+          <div class="media-cards">
 {cards_joined}
+          </div>
+        </div>"""
+        rows_html.append(row)
+
+    rows_joined = "\n\n".join(rows_html)
+    return f"""    <section aria-label="中文科研公众号">
+      <div class="section-bar">
+        <div class="section-title-wrap">
+          <span class="section-accent-bar" aria-hidden="true"></span>
+          <h2>中文科研公众号</h2>
+        </div>
+      </div>
+      <div class="media-rows">
+{rows_joined}
       </div>
     </section>"""
 
@@ -177,7 +228,7 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="生成简约浅色多栏卡片风 AI 早报 HTML")
+    parser = argparse.ArgumentParser(description="生成简约浅色炫酷多栏卡片风 AI 早报 HTML")
     parser.add_argument("input_json", type=Path, help="输入 JSON 文件路径")
     parser.add_argument(
         "-t",

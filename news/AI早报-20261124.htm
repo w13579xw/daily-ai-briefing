@@ -6,20 +6,21 @@
   <title>AI早报 - 2026年11月24日</title>
   <style>
     :root {
-      --bg: #f5f7fa;
-      --surface: #ffffff;
+      --bg: #f4f6fb;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-solid: #ffffff;
       --surface-subtle: #f8fafc;
-      --text-primary: #111827;
-      --text-secondary: #4b5563;
-      --text-muted: #6b7280;
-      --border: #e5e7eb;
-      --border-hover: #cbd5e1;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border: rgba(148, 163, 184, 0.24);
+      --border-hover: rgba(99, 102, 241, 0.42);
       --accent: #2563eb;
       --accent-soft: #eff6ff;
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
-      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
-      --radius-lg: 14px;
-      --radius-md: 10px;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 28px rgba(15, 23, 42, 0.08);
+      --radius-lg: 16px;
+      --radius-md: 11px;
       --radius-pill: 999px;
     }
 
@@ -33,25 +34,52 @@
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
         "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
       background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse 75% 42% at 15% -5%, rgba(99, 102, 241, 0.14), transparent 60%),
+        radial-gradient(ellipse 65% 40% at 88% 0%, rgba(14, 165, 233, 0.13), transparent 58%),
+        radial-gradient(rgba(148, 163, 184, 0.22) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 22px 22px;
       color: var(--text-primary);
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
       padding: 18px 20px 36px;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 1240px;
+      max-width: 1280px;
       margin: 0 auto;
     }
 
-    /* 紧凑顶部概览条 */
+    /* 炫酷毛玻璃顶部概览条 */
     .header-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 22px 16px;
-      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 18px;
+      padding: 18px 24px 16px;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.8);
       margin-bottom: 18px;
+    }
+
+    .header-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #4f46e5, #06b6d4, #10b981, #f97316, #4f46e5);
+      background-size: 220% 100%;
+      animation: gradientFlow 8s linear infinite;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 220% 50%; }
     }
 
     .header-top {
@@ -60,7 +88,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .brand-row {
@@ -70,32 +98,39 @@
       flex-wrap: wrap;
     }
 
-    .brand-dot {
-      width: 10px;
-      height: 10px;
+    .brand-pulse {
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #2563eb, #0ea5e9);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
-      flex-shrink: 0;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.16);
+      animation: pulseGlow 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.16); }
+      50% { box-shadow: 0 0 0 7px rgba(6, 182, 212, 0.12); }
     }
 
     h1 {
       font-size: 22px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--text-primary);
+      background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       line-height: 1.2;
     }
 
     .date-badge {
       display: inline-flex;
       align-items: center;
-      background: var(--surface-subtle);
+      background: rgba(241, 245, 249, 0.9);
       border: 1px solid var(--border);
       border-radius: var(--radius-pill);
-      padding: 3px 11px;
+      padding: 3px 12px;
       font-size: 12.5px;
-      font-weight: 500;
+      font-weight: 600;
       color: var(--text-secondary);
     }
 
@@ -108,15 +143,15 @@
     .stat-pill {
       font-size: 12px;
       color: var(--text-muted);
-      background: var(--surface-subtle);
+      background: rgba(248, 250, 252, 0.95);
       border: 1px solid var(--border);
-      padding: 3px 10px;
+      padding: 3px 11px;
       border-radius: var(--radius-pill);
     }
 
     .stat-pill strong {
       color: var(--text-primary);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .summary-lead {
@@ -125,7 +160,7 @@
       line-height: 1.6;
     }
 
-    /* 分区标题与右侧筛选条合并为一行 */
+    /* 分区标题栏 */
     .section-bar {
       display: flex;
       align-items: center;
@@ -133,6 +168,19 @@
       flex-wrap: wrap;
       gap: 10px;
       margin: 18px 0 12px;
+    }
+
+    .section-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-accent-bar {
+      width: 4px;
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #4f46e5, #06b6d4);
     }
 
     .section-bar h2 {
@@ -158,7 +206,7 @@
       padding: 4px 12px;
       border-radius: var(--radius-pill);
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.16s ease;
     }
 
     .filter-btn:hover {
@@ -167,12 +215,145 @@
     }
 
     .filter-btn.active {
-      background: var(--text-primary);
-      border-color: var(--text-primary);
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border-color: #0f172a;
       color: #ffffff;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.16);
     }
 
-    /* 板块一：2列紧凑网格（首条在全览时跨2列） */
+    /* ===== 上方板块：三行横向科研公众号轨道 ===== */
+    .media-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .media-row {
+      display: grid;
+      grid-template-columns: 144px minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: var(--radius-lg);
+      padding: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .media-brand {
+      border-radius: 12px;
+      padding: 14px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+      color: #ffffff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media-brand::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.24), transparent 60%);
+      pointer-events: none;
+    }
+
+    .brand-xzy {
+      background: linear-gradient(145deg, #4338ca 0%, #6366f1 55%, #3b82f6 100%);
+      box-shadow: 0 6px 18px rgba(79, 70, 229, 0.24);
+    }
+
+    .brand-qbit {
+      background: linear-gradient(145deg, #047857 0%, #10b981 55%, #06b6d4 100%);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.24);
+    }
+
+    .brand-jqzx {
+      background: linear-gradient(145deg, #c2410c 0%, #ea580c 55%, #e11d48 100%);
+      box-shadow: 0 6px 18px rgba(234, 88, 12, 0.24);
+    }
+
+    .media-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .media-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    .media-sub {
+      font-size: 11px;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+
+    .media-count {
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 9px;
+      border-radius: var(--radius-pill);
+    }
+
+    .media-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .wechat-card {
+      background: var(--surface-solid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .wechat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .row-xzy .wechat-card:hover { border-color: rgba(99, 102, 241, 0.5); }
+    .row-qbit .wechat-card:hover { border-color: rgba(16, 185, 129, 0.5); }
+    .row-jqzx .wechat-card:hover { border-color: rgba(234, 88, 12, 0.5); }
+
+    .wechat-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .wechat-summary {
+      font-size: 12.4px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 10px;
+      flex: 1;
+    }
+
+    /* ===== 下方板块：前沿动态与 GitHub 热门 ===== */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -183,15 +364,10 @@
       grid-column: span 2;
     }
 
-    /* 板块二：3列紧凑网格 */
-    .wechat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
     .card {
       background: var(--surface);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 15px 18px;
@@ -202,7 +378,7 @@
     }
 
     .card:hover {
-      transform: translateY(-1px);
+      transform: translateY(-2px);
       box-shadow: var(--shadow-md);
       border-color: var(--border-hover);
     }
@@ -251,11 +427,6 @@
     .tag-github { background: #fff7ed; color: #c2410c; }
     .tag-tool { background: #ecfeff; color: #0e7490; }
 
-    .media-xzy { background: #eef2ff; color: #4338ca; }
-    .media-qbit { background: #ecfdf5; color: #047857; }
-    .media-jqzx { background: #fffbeb; color: #b45309; }
-    .media-other { background: #f3f4f6; color: #374151; }
-
     .source-label {
       font-size: 11.5px;
       color: var(--text-muted);
@@ -295,7 +466,7 @@
     }
 
     .value-box {
-      background: var(--surface-subtle);
+      background: linear-gradient(90deg, rgba(239, 246, 255, 0.85), rgba(248, 250, 252, 0.85));
       border-left: 3px solid var(--accent);
       border-radius: 0 var(--radius-md) var(--radius-md) 0;
       padding: 8px 11px;
@@ -310,9 +481,9 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 8px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
+      gap: 6px;
+      padding-top: 9px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.32);
       margin-top: auto;
     }
 
@@ -342,6 +513,26 @@
       color: #1d4ed8;
     }
 
+    .wx-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11.8px;
+      font-weight: 600;
+      color: #047857;
+      text-decoration: none;
+      padding: 3.5px 9px;
+      border-radius: 7px;
+      background: #ecfdf5;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .wx-btn:hover {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
     .resource-btn {
       display: inline-flex;
       align-items: center;
@@ -350,7 +541,7 @@
       font-weight: 500;
       color: var(--text-secondary);
       text-decoration: none;
-      padding: 3.5px 9px;
+      padding: 3.5px 8.5px;
       border-radius: 7px;
       background: var(--surface-subtle);
       border: 1px solid var(--border);
@@ -372,24 +563,6 @@
       max-width: 60%;
     }
 
-    .wechat-section {
-      margin-top: 22px;
-    }
-
-    .wechat-card {
-      padding: 14px 16px;
-    }
-
-    .wechat-card .card-title {
-      font-size: 14.5px;
-      margin-bottom: 7px;
-    }
-
-    .wechat-card .section-text {
-      font-size: 12.6px;
-      line-height: 1.55;
-    }
-
     footer {
       text-align: center;
       margin-top: 24px;
@@ -397,16 +570,28 @@
       color: var(--text-muted);
     }
 
-    @media (max-width: 1024px) {
-      .wechat-grid {
+    @media (max-width: 1040px) {
+      .media-cards {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 760px) {
       body { padding: 14px 12px 28px; }
-      .cards-grid,
-      .wechat-grid {
+      .media-row {
+        grid-template-columns: 1fr;
+      }
+      .media-brand {
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+        padding: 10px 14px;
+      }
+      .media-count {
+        margin-left: auto;
+      }
+      .media-cards,
+      .cards-grid {
         grid-template-columns: 1fr;
       }
       .cards-grid.has-featured .card:first-child:not(.hidden) {
@@ -420,21 +605,183 @@
     <header class="header-card">
       <div class="header-top">
         <div class="brand-row">
-          <span class="brand-dot" aria-hidden="true"></span>
+          <span class="brand-pulse" aria-hidden="true"></span>
           <h1>AI 早报</h1>
           <span class="date-badge">2026年11月24日 · 星期二</span>
         </div>
         <div class="overview-stats">
-          <span class="stat-pill">前沿 &amp; GitHub <strong>5</strong></span>
           <span class="stat-pill">科研公众号 <strong>9</strong></span>
+          <span class="stat-pill">前沿 &amp; GitHub <strong>5</strong></span>
           <span class="stat-pill">每日 08:30 自动更新</span>
         </div>
       </div>
       <p class="summary-lead">今日聚焦：行业转向可量化安全标尺、低成本专用决策模型与 Agent 工程化框架；中文科研公众号集中聚焦黎曼猜想与 VP≠VNP 形式化证明、百度文心 5.5 开源、智谱 GLM-5.4 架构创新及人形机器人进厂落地。</p>
     </header>
 
+        <section aria-label="中文科研公众号">
+      <div class="section-bar">
+        <div class="section-title-wrap">
+          <span class="section-accent-bar" aria-hidden="true"></span>
+          <h2>中文科研公众号</h2>
+        </div>
+      </div>
+      <div class="media-rows">
+        <div class="media-row row-xzy">
+          <div class="media-brand brand-xzy">
+            <div class="media-logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2.5L14.4 8.6L20.5 11L14.4 13.4L12 19.5L9.6 13.4L3.5 11L9.6 8.6L12 2.5Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+          <circle cx="12" cy="11" r="2.2" fill="white"/>
+          <circle cx="19" cy="4.5" r="1.3" fill="white" opacity="0.85"/>
+        </svg></div>
+            <div>
+              <div class="media-name">新智元</div>
+              <div class="media-sub">AI_era</div>
+            </div>
+            <span class="media-count">3 篇</span>
+          </div>
+          <div class="media-cards">
+          <article class="wechat-card">
+            <h3 class="wechat-title">黎曼200周年大会首日猜想告破！丘成桐：数学进入新纪元</h3>
+            <p class="wechat-summary">Anthropic 数学家 Levent Alpöge 与 Claude 联手历时 41 天，输出 4 页核心说明及约 1700 万行 Lean 形式化代码攻克黎曼猜想，获 Lean 与 Mathlib 社区联合认证，丘成桐评价数学正式迈入新纪元。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E6%96%B0%E6%99%BA%E5%85%83%20%E9%BB%8E%E6%9B%BC200%E5%91%A8%E5%B9%B4%E5%A4%A7%E4%BC%9A%E9%A6%96%E6%97%A5%E7%8C%9C%E6%83%B3%E5%91%8A%E7%A0%B4%EF%BC%81%E4%B8%98%E6%88%90%E6%A1%90%EF%BC%9A%E6%95%B0%E5%AD%A6%E8%BF%9B%E5%85%A5%E6%96%B0%E7%BA%AA" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEnl2cQlssiQQlTKaXYRp6BAk6RnKctRrtBow3J4nGFmc4Q2SkmeWZ1J4ykzq9STcBGT5ykjYxAog063RicTfPnDwocCTOjuzZPbB7e3_clr2BLQ1v5l7A=" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHIr8f3ujA-GWzYNvEkqGCS-ZvQ34gICgCKdaXfI7mbR6PSFBGmagDPFhJMCfVqYEjTsuq_NTySuEsYC1MNZAYWCOk_u__9uqdZrhuR0pWO75I3RKyH1LelRhQ-" target="_blank" rel="noopener noreferrer">36氪深度追踪 ↗</a>
+              </div>
+            </div>
+          </article>
+          <article class="wechat-card">
+            <h3 class="wechat-title">人形机器人正式进厂打工：智元精灵 G2 并线长电科技与蓝思科技产线</h3>
+            <p class="wechat-summary">智元创新首批精灵 G2 人形机器人进驻长电科技汽车电子芯片测试车间承担高精度料盘上下料与分拣，并同步与蓝思科技合作在 3C 手机 MMI/ANT/CAM 测试产线部署数十台机器人。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E6%96%B0%E6%99%BA%E5%85%83%20%E4%BA%BA%E5%BD%A2%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%AD%A3%E5%BC%8F%E8%BF%9B%E5%8E%82%E6%89%93%E5%B7%A5%EF%BC%9A%E6%99%BA%E5%85%83%E7%B2%BE%E7%81%B5%20G2%20%E5%B9%B6%E7%BA%BF%E9%95%BF%E7%94%B5%E7%A7%91%E6%8A%80" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHNo3eAgtIfpENklOuJ-BzeUzR1TJtxDwpj7eMoAF5btXT07pJS2Sd2CwXfE4STSIui8yQbP_9XbyEfdi1X_LGsTpmUdORXSTPcNJ_S5klyMH6DBTSmmK7zuI54mNgDIhmxgaGalq5q7Tbq3dBHfldmb2sqcBn576IxgFPkr7BhV5k=" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH5HYUYU9ohFn76h8ZbzHiGoC-qo9LBr3YArSX4pKwYYyGhpCQoaTopcbau8peESSpMAB5WYR2lx3b4mLiCwbw8EuE6BlFP4PhCzBp8f3mPLlWWi9d0uO4CPECZSMt0jFNZUM4CQxT60u9ezjN-" target="_blank" rel="noopener noreferrer">长电科技并线报道 ↗</a>
+              </div>
+            </div>
+          </article>
+          <article class="wechat-card">
+            <h3 class="wechat-title">智谱发布首个 Loop Transformer 旗舰 GLM-5.4，主打“泛 Coding”与百万上下文</h3>
+            <p class="wechat-summary">通过将 28 层共享权重模块循环计算两轮，在不盲目膨胀参数规模的情况下拉升推理深度；原生支持视觉与 1M 上下文，可用代码生成游戏、3D 模型与视频，安全评估后计划开源权重。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E6%96%B0%E6%99%BA%E5%85%83%20%E6%99%BA%E8%B0%B1%E5%8F%91%E5%B8%83%E9%A6%96%E4%B8%AA%20Loop%20Transformer%20%E6%97%97%E8%88%B0" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHCXNDdc2wM_QGxaLonWDLcpjnU9rpxf3LeS-zd3A18xxdPLT9WiZIcbu6AsGBcgpe8KrQ1CgpwZgrxatOw7DIpA5gaB38NOBnz53b0WmlsZOM8qVmwsSPcsS3iOjRoWFVtzsyNygxkxOxNUoA3aOJkYWWDac95dk5Y29kcFyKuwHAANugI4dm46JI=" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGaNZQhzZVtyimDJXPyqD16p-KCI5vY-oGQXCuudVJeLC0ON4hlyGsjAyHz1XGD2qLVVqFh-ekabPrNAxejj3Ly-0jEtbYQMbjkpBjg5Wvyn32Tj9YDHz8xbfs86WH-MUWIS8_VijTcI0b8q6pI4A==" target="_blank" rel="noopener noreferrer">架构与评测解析 ↗</a>
+              </div>
+            </div>
+          </article>
+          </div>
+        </div>
+
+        <div class="media-row row-qbit">
+          <div class="media-brand brand-qbit">
+            <div class="media-logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(-32 12 12)" stroke="white" stroke-width="1.7"/>
+          <ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(32 12 12)" stroke="white" stroke-width="1.7" opacity="0.88"/>
+          <circle cx="12" cy="12" r="2.6" fill="white"/>
+        </svg></div>
+            <div>
+              <div class="media-name">量子位</div>
+              <div class="media-sub">QbitAI</div>
+            </div>
+            <span class="media-count">3 篇</span>
+          </div>
+          <div class="media-cards">
+          <article class="wechat-card">
+            <h3 class="wechat-title">百度正式开源文心 5.5 Flash Preview：280B 总参 / 14B 激活、Apache 2.0</h3>
+            <p class="wechat-summary">同步开源后训练版与基座版，支持 100 万 Token 上下文，在 CodeArena WebDev 榜单跻身开源第二，原生兼容 vLLM 与 SGLang 推理部署框架。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E9%87%8F%E5%AD%90%E4%BD%8D%20%E7%99%BE%E5%BA%A6%E6%AD%A3%E5%BC%8F%E5%BC%80%E6%BA%90%E6%96%87%E5%BF%83%205.5%20Flash%20Preview" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEqoIFsn_1Btssjc5w6cCbYy9mVqcHWnCxZAVWhDlwCWj0O1hJOEd70-5fNGDVlytg3cCBToOLwLpbkVd1jLIkyYUnmOILhFHJEnJ6Yd-6uhLAGBnyTUz4RS17elQ3D4JI=" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              <a class="resource-btn" href="https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview" target="_blank" rel="noopener noreferrer">HF 权重 ↗</a>
+              <a class="resource-btn" href="https://huggingface.co/baidu/ERNIE-5.5-Flash-Base" target="_blank" rel="noopener noreferrer">Base 模型 ↗</a>
+              <a class="resource-btn" href="https://github.com/baidu/vLLM-ERNIE" target="_blank" rel="noopener noreferrer">vLLM 适配 ↗</a>
+              </div>
+            </div>
+          </article>
+          <article class="wechat-card">
+            <h3 class="wechat-title">蚂蚁阿福医疗健康大模型家族集中发布并开源，单机解锁专业医疗 AI</h3>
+            <p class="wechat-summary">覆盖医疗专业推理、多模态理解、疾病风险预测、安全防护与实时智能体等全链路能力，同步开放同款开源模型，让医生在一台普通电脑上即可本地运行专业医疗辅助 AI。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E9%87%8F%E5%AD%90%E4%BD%8D%20%E8%9A%82%E8%9A%81%E9%98%BF%E7%A6%8F%E5%8C%BB%E7%96%97%E5%81%A5%E5%BA%B7%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AE%B6%E6%97%8F%E9%9B%86%E4%B8%AD%E5%8F%91%E5%B8%83%E5%B9%B6%E5%BC%80%E6%BA%90%EF%BC%8C%E5%8D%95%E6%9C%BA%E8%A7%A3%E9%94%81%E4%B8%93" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFnoG_0DIj1UZtdaoUBdPO2ey8pZEwW6XtgRCm9aDDFCiYltz38ZOwkfrkS8akDb-rL4cl0TK5oaycfzR0uaH0wJQsVMfU34Zy1-QMX4P3G-rQMCIGt12c2kqo5e1R3gA==" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              </div>
+            </div>
+          </article>
+          <article class="wechat-card">
+            <h3 class="wechat-title">Google DeepMind &amp; Quantum AI 用 Gemini 4 智能体 + Lean 优化量子算法</h3>
+            <p class="wechat-summary">多组 Gemini 4 智能体协同 Lean 形式化验证工具，将部分核心量子运算程序最高提速 290 倍，大幅压低核聚变与药物研发模拟的量子比特需求，并在 GitHub 开源 Lean 验证库。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E9%87%8F%E5%AD%90%E4%BD%8D%20Google%20DeepMind%20%26%20Quantum%20" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHhiBfNVo6yipw72GDUgcBLveNVct8dciX0YHdB0YG1ximasmGUMM4WgMKnjjXc-e2BOM54VWNPT5LXyMuE5NqVv1nyyeQyIpb5peEdWw7wCKOMDEMXke5UwIs=" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFJMgzXMDDgpIO37_aV4nE-KbJ3B3V0BogduQyXA53TrY-5-G0sDdJjazBnpkeR9zt8v386y2bFdsjyexzJgMjN083XF9wTO6ULqer4mOfYyFVEPvO1Z7T5Po-D9eRjdOotNlsGlFtaMMutSPsYsum0x2oAePaFZqTuZnkn" target="_blank" rel="noopener noreferrer">技术细节报道 ↗</a>
+              </div>
+            </div>
+          </article>
+          </div>
+        </div>
+
+        <div class="media-row row-jqzx">
+          <div class="media-brand brand-jqzx">
+            <div class="media-logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 20.2C12 20.2 4.2 15.3 4.2 9.4C4.2 6.6 6.4 4.5 9 4.5C10.5 4.5 11.4 5.3 12 6.3C12.6 5.3 13.5 4.5 15 4.5C17.6 4.5 19.8 6.6 19.8 9.4C19.8 15.3 12 20.2 12 20.2Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M7.5 11.2H10L11.2 8.8L12.8 13.4L14 11.2H16.5" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></div>
+            <div>
+              <div class="media-name">机器之心</div>
+              <div class="media-sub">Synced</div>
+            </div>
+            <span class="media-count">3 篇</span>
+          </div>
+          <div class="media-cards">
+          <article class="wechat-card">
+            <h3 class="wechat-title">Meta 亚历山大·王：超级智能即将到来，AI 将接管一切科学研究</h3>
+            <p class="wechat-summary">深度编译 Meta 首席 AI 官 Alexandr Wang 长文《Superintelligence is Arriving》，剖析 AI 攻克黎曼猜想后的奇点加速，预测 AI 将自动化科研全流程，同时警示人类不应将社会控制权完全移交 AI。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E6%9C%BA%E5%99%A8%E4%B9%8B%E5%BF%83%20Meta%20%E4%BA%9A%E5%8E%86%E5%B1%B1%E5%A4%A7%C2%B7%E7%8E%8B%EF%BC%9A%E8%B6%85%E7%BA%A7%E6%99%BA%E8%83%BD%E5%8D%B3%E5%B0%86%E5%88%B0%E6%9D%A5%EF%BC%8CAI%20%E5%B0%86%E6%8E%A5" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGK86A0CfYXOHw1etIiM6YcZhZA0UNaV7U7hOkSdcHvtFU8hseWq-qZsTPa514MeqH8qMUWurVw7G7RJskQlC8TjyPFl44XJtGlP83zrrk7ICuMSQShj2MxM21LmCXeS4MY" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFFaPA7ky68dPgAAigIMC9_SlZpKzCE9FivANkSX3nzb3nYLUqw2fZMFYanQ-5KAwmOIgxR4oQ92YOp-AjOlf1OBxIy4WdDNnyik3qGkce8_4LlbnDtBcz5rFoq" target="_blank" rel="noopener noreferrer">长文编译 ↗</a>
+              </div>
+            </div>
+          </article>
+          <article class="wechat-card">
+            <h3 class="wechat-title">Claude 独立提交 70 页论文《VP ≠ VNP Over Every Field》，附 7.3 万行 Lean 4 代码</h3>
+            <p class="wechat-summary">Anthropic 开源 formal-math 仓库，公布由内部研究版 Claude 独立完成的 Valiant 猜想（代数版 P vs NP）证明，通过 Lean 4 与独立内核检查；官方同步声明尚未经人类数学家人工审查。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E6%9C%BA%E5%99%A8%E4%B9%8B%E5%BF%83%20Claude%20%E7%8B%AC%E7%AB%8B%E6%8F%90%E4%BA%A4%2070%20%E9%A1%B5%E8%AE%BA%E6%96%87%E3%80%8AVP%20%E2%89%A0%20VN" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHaLj7f16C2TDNDrfJquA6Dm9yvUminBT_xQqIAnIjA7ioaA-_zbkqk8XzdPG4QXRVDrHxnp8fCdwAMgSvVKQJNob6kS4Yrdr-OYLQhJ415_wGJjjYSbWs_y2EtKcYo3301CsBDyk7K7k6Wv263FNhkKltoDzgQSnbJOJoFWZnuKZTpGsuKcR4=" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              <a class="resource-btn" href="https://github.com/anthropics/formal-math" target="_blank" rel="noopener noreferrer">GitHub 论文与代码 ↗</a>
+              </div>
+            </div>
+          </article>
+          <article class="wechat-card">
+            <h3 class="wechat-title">清华与无问芯穹开源智算仿真平台 Uni3Sim；DeepSeek 与 FlashAttention 算子获形式化验证</h3>
+            <p class="wechat-summary">机器之心 Pro 追踪报道：清华联合无问芯穹开源系统级仿真平台 Uni3Sim 助力下一代智算集群设计，同期 DeepSeek 与 FlashAttention 多个生产级 AI 底层算子完成形式化数学验证。</p>
+            <div class="card-footer">
+              <div class="link-group">
+                <a class="wx-btn" href="https://weixin.sogou.com/weixin?type=2&amp;query=%E6%9C%BA%E5%99%A8%E4%B9%8B%E5%BF%83%20%E6%B8%85%E5%8D%8E%E4%B8%8E%E6%97%A0%E9%97%AE%E8%8A%AF%E7%A9%B9%E5%BC%80%E6%BA%90%E6%99%BA%E7%AE%97%E4%BB%BF%E7%9C%9F%E5%B9%B3%E5%8F%B0%20Uni3Sim%EF%BC%9BDe" target="_blank" rel="noopener noreferrer">微信原文 ↗</a>
+              <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGR0CHRxf_M9dlok-_PlAc4z1VCU1BXzzwG7e8PQia9j90NEJltZcAFvMktEtrjL-ghQvRRs0dcrwgFiW6IZ1WnRp0MP8_p4dJeP9opVHssmQwOZtWdUKYAUA==" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>
+              </div>
+            </div>
+          </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="section-bar">
-      <h2>前沿动态与 GitHub 热门</h2>
+      <div class="section-title-wrap">
+        <span class="section-accent-bar" aria-hidden="true"></span>
+        <h2>前沿动态与 GitHub 热门</h2>
+      </div>
       <nav class="filter-bar" data-group="main" aria-label="按分类筛选">
         <button class="filter-btn active" data-filter="all">全部 (5)</button>
         <button class="filter-btn" data-filter="行业动态">行业动态</button>
@@ -551,201 +898,6 @@
       </article>
     </main>
 
-        <section class="wechat-section" aria-label="中文科研公众号">
-      <div class="section-bar">
-        <h2>中文科研公众号</h2>
-        <nav class="filter-bar" data-group="wechat" aria-label="按公众号筛选">
-          <button class="filter-btn active" data-filter="all">全部 (9)</button>
-        <button class="filter-btn" data-filter="新智元">新智元 (3)</button>
-        <button class="filter-btn" data-filter="量子位">量子位 (3)</button>
-        <button class="filter-btn" data-filter="机器之心">机器之心 (3)</button>
-        </nav>
-      </div>
-      <div class="wechat-grid" id="wechat-grid">
-        <article class="card wechat-card" data-media="新智元">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W01</span>
-              <span class="tag media-xzy">新智元</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">黎曼200周年大会首日猜想告破！丘成桐：数学进入新纪元</h3>
-          <div class="card-body">
-            <p class="section-text">Anthropic 数学家 Levent Alpöge 与 Claude 联手历时 41 天，输出 4 页核心说明及约 1700 万行 Lean 形式化代码攻克黎曼猜想，获 Lean 与 Mathlib 社区联合认证，丘成桐评价数学正式迈入新纪元。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEnl2cQlssiQQlTKaXYRp6BAk6RnKctRrtBow3J4nGFmc4Q2SkmeWZ1J4ykzq9STcBGT5ykjYxAog063RicTfPnDwocCTOjuzZPbB7e3_clr2BLQ1v5l7A=" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-            <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHIr8f3ujA-GWzYNvEkqGCS-ZvQ34gICgCKdaXfI7mbR6PSFBGmagDPFhJMCfVqYEjTsuq_NTySuEsYC1MNZAYWCOk_u__9uqdZrhuR0pWO75I3RKyH1LelRhQ-" target="_blank" rel="noopener noreferrer">36氪深度追踪 ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="新智元">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W02</span>
-              <span class="tag media-xzy">新智元</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">人形机器人正式进厂打工：智元精灵 G2 并线长电科技与蓝思科技产线</h3>
-          <div class="card-body">
-            <p class="section-text">智元创新首批精灵 G2 人形机器人进驻长电科技汽车电子芯片测试车间承担高精度料盘上下料与分拣，并同步与蓝思科技合作在 3C 手机 MMI/ANT/CAM 测试产线部署数十台机器人。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHNo3eAgtIfpENklOuJ-BzeUzR1TJtxDwpj7eMoAF5btXT07pJS2Sd2CwXfE4STSIui8yQbP_9XbyEfdi1X_LGsTpmUdORXSTPcNJ_S5klyMH6DBTSmmK7zuI54mNgDIhmxgaGalq5q7Tbq3dBHfldmb2sqcBn576IxgFPkr7BhV5k=" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-            <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH5HYUYU9ohFn76h8ZbzHiGoC-qo9LBr3YArSX4pKwYYyGhpCQoaTopcbau8peESSpMAB5WYR2lx3b4mLiCwbw8EuE6BlFP4PhCzBp8f3mPLlWWi9d0uO4CPECZSMt0jFNZUM4CQxT60u9ezjN-" target="_blank" rel="noopener noreferrer">长电科技并线报道 ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="新智元">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W03</span>
-              <span class="tag media-xzy">新智元</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">智谱发布首个 Loop Transformer 旗舰 GLM-5.4，主打“泛 Coding”与百万上下文</h3>
-          <div class="card-body">
-            <p class="section-text">通过将 28 层共享权重模块循环计算两轮，在不盲目膨胀参数规模的情况下拉升推理深度；原生支持视觉与 1M 上下文，可用代码生成游戏、3D 模型与视频，安全评估后计划开源权重。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHCXNDdc2wM_QGxaLonWDLcpjnU9rpxf3LeS-zd3A18xxdPLT9WiZIcbu6AsGBcgpe8KrQ1CgpwZgrxatOw7DIpA5gaB38NOBnz53b0WmlsZOM8qVmwsSPcsS3iOjRoWFVtzsyNygxkxOxNUoA3aOJkYWWDac95dk5Y29kcFyKuwHAANugI4dm46JI=" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-            <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGaNZQhzZVtyimDJXPyqD16p-KCI5vY-oGQXCuudVJeLC0ON4hlyGsjAyHz1XGD2qLVVqFh-ekabPrNAxejj3Ly-0jEtbYQMbjkpBjg5Wvyn32Tj9YDHz8xbfs86WH-MUWIS8_VijTcI0b8q6pI4A==" target="_blank" rel="noopener noreferrer">架构与评测解析 ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="量子位">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W04</span>
-              <span class="tag media-qbit">量子位</span>
-            </div>
-            <span class="source-label">2026-11-24</span>
-          </div>
-          <h3 class="card-title">百度正式开源文心 5.5 Flash Preview：280B 总参 / 14B 激活、Apache 2.0</h3>
-          <div class="card-body">
-            <p class="section-text">同步开源后训练版与基座版，支持 100 万 Token 上下文，在 CodeArena WebDev 榜单跻身开源第二，原生兼容 vLLM 与 SGLang 推理部署框架。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEqoIFsn_1Btssjc5w6cCbYy9mVqcHWnCxZAVWhDlwCWj0O1hJOEd70-5fNGDVlytg3cCBToOLwLpbkVd1jLIkyYUnmOILhFHJEnJ6Yd-6uhLAGBnyTUz4RS17elQ3D4JI=" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-            <a class="resource-btn" href="https://huggingface.co/baidu/ERNIE-5.5-Flash-Preview" target="_blank" rel="noopener noreferrer">HF 权重 ↗</a>
-            <a class="resource-btn" href="https://huggingface.co/baidu/ERNIE-5.5-Flash-Base" target="_blank" rel="noopener noreferrer">Base 模型 ↗</a>
-            <a class="resource-btn" href="https://github.com/baidu/vLLM-ERNIE" target="_blank" rel="noopener noreferrer">vLLM 适配 ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="量子位">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W05</span>
-              <span class="tag media-qbit">量子位</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">蚂蚁阿福医疗健康大模型家族集中发布并开源，单机解锁专业医疗 AI</h3>
-          <div class="card-body">
-            <p class="section-text">覆盖医疗专业推理、多模态理解、疾病风险预测、安全防护与实时智能体等全链路能力，同步开放同款开源模型，让医生在一台普通电脑上即可本地运行专业医疗辅助 AI。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFnoG_0DIj1UZtdaoUBdPO2ey8pZEwW6XtgRCm9aDDFCiYltz38ZOwkfrkS8akDb-rL4cl0TK5oaycfzR0uaH0wJQsVMfU34Zy1-QMX4P3G-rQMCIGt12c2kqo5e1R3gA==" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="量子位">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W06</span>
-              <span class="tag media-qbit">量子位</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">Google DeepMind &amp; Quantum AI 用 Gemini 4 智能体 + Lean 优化量子算法</h3>
-          <div class="card-body">
-            <p class="section-text">多组 Gemini 4 智能体协同 Lean 形式化验证工具，将部分核心量子运算程序最高提速 290 倍，大幅压低核聚变与药物研发模拟的量子比特需求，并在 GitHub 开源 Lean 验证库。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHhiBfNVo6yipw72GDUgcBLveNVct8dciX0YHdB0YG1ximasmGUMM4WgMKnjjXc-e2BOM54VWNPT5LXyMuE5NqVv1nyyeQyIpb5peEdWw7wCKOMDEMXke5UwIs=" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-            <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFJMgzXMDDgpIO37_aV4nE-KbJ3B3V0BogduQyXA53TrY-5-G0sDdJjazBnpkeR9zt8v386y2bFdsjyexzJgMjN083XF9wTO6ULqer4mOfYyFVEPvO1Z7T5Po-D9eRjdOotNlsGlFtaMMutSPsYsum0x2oAePaFZqTuZnkn" target="_blank" rel="noopener noreferrer">技术细节报道 ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="机器之心">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W07</span>
-              <span class="tag media-jqzx">机器之心</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">Meta 亚历山大·王：超级智能即将到来，AI 将接管一切科学研究</h3>
-          <div class="card-body">
-            <p class="section-text">深度编译 Meta 首席 AI 官 Alexandr Wang 长文《Superintelligence is Arriving》，剖析 AI 攻克黎曼猜想后的奇点加速，预测 AI 将自动化科研全流程，同时警示人类不应将社会控制权完全移交 AI。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGK86A0CfYXOHw1etIiM6YcZhZA0UNaV7U7hOkSdcHvtFU8hseWq-qZsTPa514MeqH8qMUWurVw7G7RJskQlC8TjyPFl44XJtGlP83zrrk7ICuMSQShj2MxM21LmCXeS4MY" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-            <a class="resource-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFFaPA7ky68dPgAAigIMC9_SlZpKzCE9FivANkSX3nzb3nYLUqw2fZMFYanQ-5KAwmOIgxR4oQ92YOp-AjOlf1OBxIy4WdDNnyik3qGkce8_4LlbnDtBcz5rFoq" target="_blank" rel="noopener noreferrer">长文编译 ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="机器之心">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W08</span>
-              <span class="tag media-jqzx">机器之心</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">Claude 独立提交 70 页论文《VP ≠ VNP Over Every Field》，附 7.3 万行 Lean 4 代码</h3>
-          <div class="card-body">
-            <p class="section-text">Anthropic 开源 formal-math 仓库，公布由内部研究版 Claude 独立完成的 Valiant 猜想（代数版 P vs NP）证明，通过 Lean 4 与独立内核检查；官方同步声明尚未经人类数学家人工审查。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHaLj7f16C2TDNDrfJquA6Dm9yvUminBT_xQqIAnIjA7ioaA-_zbkqk8XzdPG4QXRVDrHxnp8fCdwAMgSvVKQJNob6kS4Yrdr-OYLQhJ415_wGJjjYSbWs_y2EtKcYo3301CsBDyk7K7k6Wv263FNhkKltoDzgQSnbJOJoFWZnuKZTpGsuKcR4=" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-            <a class="resource-btn" href="https://github.com/anthropics/formal-math" target="_blank" rel="noopener noreferrer">GitHub 论文与代码 ↗</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card wechat-card" data-media="机器之心">
-          <div class="card-meta">
-            <div class="meta-left">
-              <span class="index-num">W09</span>
-              <span class="tag media-jqzx">机器之心</span>
-            </div>
-            <span class="source-label">2026-11-23</span>
-          </div>
-          <h3 class="card-title">清华与无问芯穹开源智算仿真平台 Uni3Sim；DeepSeek 与 FlashAttention 算子获形式化验证</h3>
-          <div class="card-body">
-            <p class="section-text">机器之心 Pro 追踪报道：清华联合无问芯穹开源系统级仿真平台 Uni3Sim 助力下一代智算集群设计，同期 DeepSeek 与 FlashAttention 多个生产级 AI 底层算子完成形式化数学验证。</p>
-          </div>
-          <div class="card-footer">
-            <div class="link-group">
-              <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGR0CHRxf_M9dlok-_PlAc4z1VCU1BXzzwG7e8PQia9j90NEJltZcAFvMktEtrjL-ghQvRRs0dcrwgFiW6IZ1WnRp0MP8_p4dJeP9opVHssmQwOZtWdUKYAUA==" target="_blank" rel="noopener noreferrer">推文原文 ↗</a>
-
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
     <footer>
       AI 早报 · 2026-11-24
     </footer>
@@ -753,38 +905,31 @@
 
   <script>
     (function () {
-      function setupFilter(navSelector, gridId, attrName, toggleFeatured) {
-        const nav = document.querySelector(navSelector);
-        const grid = document.getElementById(gridId);
-        if (!nav || !grid) return;
+      const nav = document.querySelector('.filter-bar[data-group="main"]');
+      const grid = document.getElementById('main-grid');
+      if (!nav || !grid) return;
 
-        const buttons = nav.querySelectorAll('.filter-btn');
-        const cards = grid.querySelectorAll('.card');
+      const buttons = nav.querySelectorAll('.filter-btn');
+      const cards = grid.querySelectorAll('.card');
 
-        buttons.forEach((btn) => {
-          btn.addEventListener('click', () => {
-            buttons.forEach((b) => b.classList.remove('active'));
-            btn.classList.add('active');
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          buttons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
 
-            const filter = btn.getAttribute('data-filter');
-            cards.forEach((card) => {
-              if (filter === 'all' || card.getAttribute(attrName) === filter) {
-                card.classList.remove('hidden');
-              } else {
-                card.classList.add('hidden');
-              }
-            });
-
-            if (toggleFeatured) {
-              const visibleCount = grid.querySelectorAll('.card:not(.hidden)').length;
-              grid.classList.toggle('has-featured', filter === 'all' && visibleCount % 2 === 1);
+          const filter = btn.getAttribute('data-filter');
+          cards.forEach((card) => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
             }
           });
-        });
-      }
 
-      setupFilter('.filter-bar[data-group="main"]', 'main-grid', 'data-category', true);
-      setupFilter('.filter-bar[data-group="wechat"]', 'wechat-grid', 'data-media', false);
+          const visibleCount = grid.querySelectorAll('.card:not(.hidden)').length;
+          grid.classList.toggle('has-featured', filter === 'all' && visibleCount % 2 === 1);
+        });
+      });
     })();
   </script>
 </body>
