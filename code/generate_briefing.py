@@ -8,7 +8,7 @@ import datetime as dt
 import html
 import json
 from pathlib import Path
-from urllib.parse import quote, urlparse
+from urllib.parse import urlparse
 
 WEEKDAYS_CN = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
 
@@ -29,7 +29,7 @@ MEDIA_META = {
         "row_cls": "row-xzy",
         "brand_cls": "brand-xzy",
         "sub": "AI_era",
-        "svg": """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        "svg": """<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M12 2.5L14.4 8.6L20.5 11L14.4 13.4L12 19.5L9.6 13.4L3.5 11L9.6 8.6L12 2.5Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
           <circle cx="12" cy="11" r="2.2" fill="white"/>
           <circle cx="19" cy="4.5" r="1.3" fill="white" opacity="0.85"/>
@@ -39,7 +39,7 @@ MEDIA_META = {
         "row_cls": "row-qbit",
         "brand_cls": "brand-qbit",
         "sub": "QbitAI",
-        "svg": """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        "svg": """<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(-32 12 12)" stroke="white" stroke-width="1.7"/>
           <ellipse cx="12" cy="12" rx="9" ry="4.2" transform="rotate(32 12 12)" stroke="white" stroke-width="1.7" opacity="0.88"/>
           <circle cx="12" cy="12" r="2.6" fill="white"/>
@@ -49,7 +49,7 @@ MEDIA_META = {
         "row_cls": "row-jqzx",
         "brand_cls": "brand-jqzx",
         "sub": "Synced",
-        "svg": """<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        "svg": """<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M12 20.2C12 20.2 4.2 15.3 4.2 9.4C4.2 6.6 6.4 4.5 9 4.5C10.5 4.5 11.4 5.3 12 6.3C12.6 5.3 13.5 4.5 15 4.5C17.6 4.5 19.8 6.6 19.8 9.4C19.8 15.3 12 20.2 12 20.2Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/>
           <path d="M7.5 11.2H10L11.2 8.8L12.8 13.4L14 11.2H16.5" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>""",
@@ -57,11 +57,12 @@ MEDIA_META = {
 }
 
 
-def build_wechat_link(media: str, title: str, wechat_url: str) -> tuple[str, str]:
-    if wechat_url and "mp.weixin.qq.com" in wechat_url:
-        return wechat_url, "微信原文 ↗"
-    query = quote(f"{media} {title[:26]}")
-    return f"https://weixin.sogou.com/weixin?type=2&query={query}", "微信原文 ↗"
+def format_time_label(published_at: str) -> str:
+    """将 2026-11-23 21:30 格式化为更紧凑的 11-23 21:30。"""
+    s = (published_at or "").strip()
+    if len(s) >= 10 and s[4] == "-" and s[7] == "-":
+        return s[5:]
+    return s or "近期"
 
 
 def render_wechat_section(wechat_items: list[dict]) -> str:
@@ -78,6 +79,14 @@ def render_wechat_section(wechat_items: list[dict]) -> str:
         items = grouped[media]
         if not items:
             continue
+
+        # 按推送时间从近到远倒序排列
+        items = sorted(
+            items,
+            key=lambda x: (x.get("published_at") or x.get("date") or ""),
+            reverse=True,
+        )
+
         meta = MEDIA_META.get(
             media,
             {
@@ -92,34 +101,43 @@ def render_wechat_section(wechat_items: list[dict]) -> str:
         for item in items:
             title = item.get("title", "")
             summary = item.get("summary", "")
-            wx_url, wx_label = build_wechat_link(media, title, item.get("wechat_url") or item.get("article_url", ""))
+            pub_raw = item.get("published_at") or item.get("date") or ""
+            pub_label = format_time_label(pub_raw)
+
+            wechat_url = item.get("wechat_url") or ""
+            article_url = item.get("article_url") or ""
+            primary_url = wechat_url if "mp.weixin.qq.com" in wechat_url else (article_url or wechat_url or "#")
+            is_wechat_direct = "mp.weixin.qq.com" in primary_url
+            btn_cls = "wx-btn" if is_wechat_direct else "link-btn"
+            btn_label = "微信原文 ↗" if is_wechat_direct else "阅读原文 ↗"
 
             extra_links: list[str] = []
-            # 若 article_url 非微信域名，则作为“同步报道”附在相关资料区
-            article_url = item.get("article_url", "")
-            if article_url and "mp.weixin.qq.com" not in article_url and article_url != wx_url:
+            if is_wechat_direct and article_url and article_url != primary_url:
                 extra_links.append(
-                    f'              <a class="resource-btn" href="{html.escape(article_url)}" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>'
+                    f'                <a class="resource-btn" href="{html.escape(article_url)}" target="_blank" rel="noopener noreferrer">同步报道 ↗</a>'
                 )
 
             for res in item.get("resources", []):
                 res_label = html.escape(res.get("label", "相关资料"))
                 res_url = html.escape(res.get("url", "#"))
                 extra_links.append(
-                    f'              <a class="resource-btn" href="{res_url}" target="_blank" rel="noopener noreferrer">{res_label} ↗</a>'
+                    f'                <a class="resource-btn" href="{res_url}" target="_blank" rel="noopener noreferrer">{res_label} ↗</a>'
                 )
 
             extra_html = "\n".join(extra_links)
-            card = f"""          <article class="wechat-card">
-            <h3 class="wechat-title">{html.escape(title)}</h3>
-            <p class="wechat-summary">{html.escape(summary)}</p>
-            <div class="card-footer">
-              <div class="link-group">
-                <a class="wx-btn" href="{html.escape(wx_url)}" target="_blank" rel="noopener noreferrer">{html.escape(wx_label)}</a>
-{extra_html}
+            card = f"""            <article class="wechat-card">
+              <div class="wechat-meta-top">
+                <span class="time-pill">🕒 {html.escape(pub_label)}</span>
               </div>
-            </div>
-          </article>"""
+              <h3 class="wechat-title">{html.escape(title)}</h3>
+              <p class="wechat-summary">{html.escape(summary)}</p>
+              <div class="card-footer">
+                <div class="link-group">
+                  <a class="{btn_cls}" href="{html.escape(primary_url)}" target="_blank" rel="noopener noreferrer">{btn_label}</a>
+{extra_html}
+                </div>
+              </div>
+            </article>"""
             cards.append(card)
 
         cards_joined = "\n".join(cards)
@@ -132,8 +150,12 @@ def render_wechat_section(wechat_items: list[dict]) -> str:
             </div>
             <span class="media-count">{len(items)} 篇</span>
           </div>
-          <div class="media-cards">
+          <div class="media-track-wrap">
+            <button class="scroll-arrow left hidden" type="button" aria-label="向左滑动">‹</button>
+            <div class="media-cards">
 {cards_joined}
+            </div>
+            <button class="scroll-arrow right hidden" type="button" aria-label="向右滑动">›</button>
           </div>
         </div>"""
         rows_html.append(row)
