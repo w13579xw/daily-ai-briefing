@@ -126,11 +126,32 @@
       font-weight: 600;
     }
 
+    .section-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 28px 0 14px;
+    }
+
+    .section-heading h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .section-heading span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .filter-btn {
@@ -223,6 +244,12 @@
     .tag-github { background: #fff7ed; color: #c2410c; }
     .tag-tool { background: #ecfeff; color: #0e7490; }
 
+    /* 科研公众号专属徽章 */
+    .media-xzy { background: #eef2ff; color: #4338ca; }
+    .media-qbit { background: #ecfdf5; color: #047857; }
+    .media-jqzx { background: #fffbeb; color: #b45309; }
+    .media-other { background: #f3f4f6; color: #374151; }
+
     .source-label {
       font-size: 12.5px;
       color: var(--text-muted);
@@ -233,7 +260,7 @@
       font-weight: 700;
       line-height: 1.45;
       color: var(--text-primary);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       letter-spacing: -0.01em;
     }
 
@@ -278,15 +305,22 @@
       border-top: 1px dashed var(--border);
     }
 
+    .link-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
     .link-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 13.5px;
+      gap: 5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--accent);
       text-decoration: none;
-      padding: 6px 14px;
+      padding: 6px 13px;
       border-radius: 8px;
       background: var(--accent-soft);
       transition: background 0.16s ease, color 0.16s ease;
@@ -297,15 +331,49 @@
       color: #1d4ed8;
     }
 
+    .resource-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+    }
+
+    .resource-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+      background: #f1f5f9;
+    }
+
     .link-domain {
       font-size: 12.5px;
       color: var(--text-muted);
       word-break: break-all;
     }
 
+    .wechat-section {
+      margin-top: 36px;
+    }
+
+    .wechat-card {
+      padding: 22px 26px;
+    }
+
+    .wechat-card .card-title {
+      font-size: 17.5px;
+      margin-bottom: 10px;
+    }
+
     footer {
       text-align: center;
-      margin-top: 36px;
+      margin-top: 40px;
       font-size: 12.5px;
       color: var(--text-muted);
     }
@@ -314,8 +382,8 @@
       body { padding: 20px 14px 44px; }
       .header-card { padding: 22px 20px 20px; }
       h1 { font-size: 23px; }
-      .card { padding: 20px 18px; }
-      .card-title { font-size: 17.5px; }
+      .card, .wechat-card { padding: 20px 18px; }
+      .card-title { font-size: 17px; }
     }
   </style>
 </head>
@@ -331,11 +399,16 @@
       </div>
       <p class="summary-lead">{{SUMMARY_LEAD}}</p>
       <div class="overview-stats">
-        <span class="stat-pill">精选条目：<strong>{{ITEM_COUNT}} 条</strong></span>
-        <span class="stat-pill">覆盖范围：<strong>AI 前沿动态 + GitHub Trending</strong></span>
+        <span class="stat-pill">前沿 &amp; GitHub：<strong>{{ITEM_COUNT}} 条</strong></span>
+        <span class="stat-pill">中文科研公众号：<strong>{{WECHAT_COUNT}} 篇</strong></span>
         <span class="stat-pill">更新频率：<strong>每日 08:30 自动生成</strong></span>
       </div>
     </header>
+
+    <div class="section-heading">
+      <h2>前沿动态与 GitHub 热门</h2>
+      <span>全球 AI 重要进展 &amp; 开源项目精选</span>
+    </div>
 
     <nav class="filter-bar" aria-label="按分类筛选">
       {{FILTER_BUTTONS}}
@@ -345,15 +418,17 @@
       {{CARDS_HTML}}
     </main>
 
+    {{WECHAT_SECTION_HTML}}
+
     <footer>
-      AI 早报 · 生成于 {{DATE_ISO}} · 单文件离线可读，点击卡片底部链接即可直达原始来源
+      AI 早报 · 生成于 {{DATE_ISO}} · 单文件离线可读，点击底部按钮直达原文与相关资料
     </footer>
   </div>
 
   <script>
     (function () {
       const buttons = document.querySelectorAll('.filter-btn');
-      const cards = document.querySelectorAll('.card');
+      const cards = document.querySelectorAll('main.cards .card');
 
       buttons.forEach((btn) => {
         btn.addEventListener('click', () => {

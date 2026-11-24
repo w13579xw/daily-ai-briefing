@@ -22,6 +22,65 @@ TAG_CLASS_MAP = {
     "工具生态": "tag-tool",
 }
 
+MEDIA_CLASS_MAP = {
+    "新智元": "media-xzy",
+    "量子位": "media-qbit",
+    "机器之心": "media-jqzx",
+}
+
+
+def render_wechat_section(wechat_items: list[dict]) -> str:
+    if not wechat_items:
+        return ""
+
+    cards: list[str] = []
+    for idx, item in enumerate(wechat_items, start=1):
+        media = item.get("media", "AI 媒体")
+        media_cls = MEDIA_CLASS_MAP.get(media, "media-other")
+        article_url = item.get("article_url", "#")
+        article_label = item.get("article_label") or "推文原文 ↗"
+
+        resource_links: list[str] = []
+        for res in item.get("resources", []):
+            res_label = html.escape(res.get("label", "相关资料"))
+            res_url = html.escape(res.get("url", "#"))
+            resource_links.append(
+                f'          <a class="resource-btn" href="{res_url}" target="_blank" rel="noopener noreferrer">{res_label} ↗</a>'
+            )
+
+        resources_html = "\n".join(resource_links)
+        card = f"""        <article class="card wechat-card">
+          <div class="card-meta">
+            <div class="meta-left">
+              <span class="index-num">W{idx:02d}</span>
+              <span class="tag {media_cls}">{html.escape(media)}</span>
+            </div>
+            <span class="source-label">{html.escape(item.get("date", ""))}</span>
+          </div>
+          <h3 class="card-title">{html.escape(item.get("title", ""))}</h3>
+          <div class="section-block">
+            <p class="section-text">{html.escape(item.get("summary", ""))}</p>
+          </div>
+          <div class="card-footer">
+            <div class="link-group">
+              <a class="link-btn" href="{html.escape(article_url)}" target="_blank" rel="noopener noreferrer">{html.escape(article_label)}</a>
+{resources_html}
+            </div>
+          </div>
+        </article>"""
+        cards.append(card)
+
+    cards_joined = "\n\n".join(cards)
+    return f"""    <section class="wechat-section" aria-label="中文科研公众号精选">
+      <div class="section-heading">
+        <h2>中文科研公众号精选</h2>
+        <span>新智元 · 量子位 · 机器之心（附推文原文与论文/代码资料）</span>
+      </div>
+      <div class="cards">
+{cards_joined}
+      </div>
+    </section>"""
+
 
 def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
     date_str = data.get("date") or dt.date.today().strftime("%Y-%m-%d")
@@ -30,6 +89,8 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
     weekday_cn = WEEKDAYS_CN[parsed_date.weekday()]
 
     items: list[dict] = data.get("items", [])
+    wechat_items: list[dict] = data.get("wechat_items", [])
+
     categories: list[str] = []
     for item in items:
         cat = item.get("category", "行业动态")
@@ -79,6 +140,8 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
       </article>"""
         cards_html.append(card)
 
+    wechat_section_html = render_wechat_section(wechat_items)
+
     template = template_path.read_text(encoding="utf-8")
     rendered = (
         template.replace("{{DATE_CN}}", date_cn)
@@ -86,8 +149,10 @@ def render_briefing(data: dict, template_path: Path, output_path: Path) -> None:
         .replace("{{DATE_ISO}}", date_str)
         .replace("{{SUMMARY_LEAD}}", html.escape(data.get("summary_lead", "")))
         .replace("{{ITEM_COUNT}}", str(len(items)))
+        .replace("{{WECHAT_COUNT}}", str(len(wechat_items)))
         .replace("{{FILTER_BUTTONS}}", "\n      ".join(filter_buttons))
         .replace("{{CARDS_HTML}}", "\n\n".join(cards_html))
+        .replace("{{WECHAT_SECTION_HTML}}", wechat_section_html)
     )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

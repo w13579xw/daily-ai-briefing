@@ -1,6 +1,6 @@
 # 每日 AI 早报（Daily AI Briefing）
 
-每天早上 **08:30（Asia/Shanghai）** 自动联网搜索过去 24 小时内 AI 领域的重要动态与 GitHub Trending 热门开源项目，过滤水文和营销软文，精选最值得关注的 5 条内容，用大白话讲清**核心亮点**与**技术价值**，生成简约浅色卡片风的单文件 HTML 早报，浏览器打开即可离线阅读。
+每天早上 **08:30（Asia/Shanghai）** 自动联网搜索过去 24 小时内 AI 领域的重要动态、GitHub Trending 热门开源项目，以及 **新智元、量子位、机器之心** 等科研微信公众号的高价值推文，用大白话讲清**核心亮点**与**技术价值**，并附上推文原文链接与论文/开源仓库等相关资料链接，生成简约浅色卡片风的单文件 HTML 早报，浏览器打开即可离线阅读。
 
 ## 目录结构
 
@@ -18,8 +18,9 @@
 
 ## 特性
 
-- **去噪精选**：聚焦大模型发布、硬核论文/技术突破、Agent 基础设施与 GitHub Trending 热门开源项目，过滤营销水文。
-- **大白话解读**：每条均包含「核心亮点」「技术价值」和可点击跳转的原始出处链接。
+- **双板块覆盖**：
+  - **前沿动态 & GitHub 热门（5 条）**：聚焦大模型发布、硬核技术突破、Agent 基础设施与 GitHub Trending 开源项目，每条含大白话核心亮点、技术价值与原始链接。
+  - **中文科研公众号精选（3–5 篇）**：追踪新智元、量子位、机器之心等科研媒体推文，同时提供**推文原文链接**与对应的**论文 / GitHub / Hugging Face 等相关资料链接**。
 - **零依赖单文件网页**：简约浅色卡片风，内置分类筛选栏与移动端适配，双击 `.htm` 即可直接查看。
 - **定时无人值守**：配合定时自动化任务，每日 08:30 自动生成并保存到 `news/AI早报-YYYYMMDD.htm`。
 
@@ -41,12 +42,25 @@ python code/generate_briefing.py data.json
   "summary_lead": "今日聚焦...",
   "items": [
     {
-      "category": "开源项目",
+      "category": "GitHub 热门",
       "source": "owner / repo",
       "title": "项目标题",
       "highlight": "大白话核心亮点",
       "value": "技术价值说明",
       "url": "https://github.com/owner/repo"
+    }
+  ],
+  "wechat_items": [
+    {
+      "media": "量子位",
+      "date": "2026-11-24",
+      "title": "推文标题",
+      "summary": "大白话要点摘要",
+      "article_url": "https://example.com/article",
+      "resources": [
+        { "label": "Hugging Face 模型", "url": "https://huggingface.co/..." },
+        { "label": "GitHub 仓库", "url": "https://github.com/..." }
+      ]
     }
   ]
 }
