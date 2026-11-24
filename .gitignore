@@ -1,0 +1,9 @@
+# 仅保留示例早报用于仓库展示，每日新生成的早报默认不上传
+news/*.htm
+!news/AI早报-20261124.htm
+
+# Python & OS
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

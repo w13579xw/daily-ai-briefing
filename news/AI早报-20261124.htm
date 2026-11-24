@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI早报 - 2026年11月24日</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --surface-subtle: #f8fafc;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --border-hover: #cbd5e1;
+      --accent: #2563eb;
+      --accent-soft: #eff6ff;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.06);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      padding: 36px 20px 64px;
+    }
+
+    .container {
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    /* 顶部概览卡片 */
+    .header-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 32px 26px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #0ea5e9);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+      flex-shrink: 0;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: 6px 14px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .summary-lead {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .overview-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-pill {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+    }
+
+    .stat-pill strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* 分类筛选栏 */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .filter-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 6px 15px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+    }
+
+    .filter-btn.active {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+      color: #ffffff;
+    }
+
+    /* 卡片列表 */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 26px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-hover);
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .index-num {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .tag-industry {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .tag-model {
+      background: #f0fdf4;
+      color: #15803d;
+    }
+
+    .tag-research {
+      background: #f5f3ff;
+      color: #6d28d9;
+    }
+
+    .tag-github {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .source-label {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.45;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .section-block {
+      margin-bottom: 14px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .section-text {
+      font-size: 14.8px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    .value-box {
+      background: var(--surface-subtle);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+    }
+
+    .value-box .section-label {
+      color: #1d4ed8;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      transition: background 0.16s ease, color 0.16s ease;
+    }
+
+    .link-btn:hover {
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+
+    .link-domain {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      word-break: break-all;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 36px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 20px 14px 44px;
+      }
+      .header-card {
+        padding: 22px 20px 20px;
+      }
+      h1 {
+        font-size: 23px;
+      }
+      .card {
+        padding: 20px 18px;
+      }
+      .card-title {
+        font-size: 17.5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header-card">
+      <div class="header-top">
+        <div class="brand-row">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <h1>AI 早报</h1>
+        </div>
+        <div class="date-badge">2026年11月24日 · 星期二</div>
+      </div>
+      <p class="summary-lead">
+        今日聚焦：行业从“拼算力、卷聊天”全面转向<strong>可量化安全标尺</strong>、<strong>低成本专用决策模型</strong>与<strong>Agent 工程化技能框架</strong>。已过滤营销软文与重复水文，精选过去 24 小时最值得关注的 5 条硬核动态。
+      </p>
+      <div class="overview-stats">
+        <span class="stat-pill">精选条目：<strong>5 条</strong></span>
+        <span class="stat-pill">覆盖范围：<strong>AI 前沿动态 + GitHub Trending</strong></span>
+        <span class="stat-pill">更新频率：<strong>每日 08:30 自动生成</strong></span>
+      </div>
+    </header>
+
+    <nav class="filter-bar" aria-label="按分类筛选">
+      <button class="filter-btn active" data-filter="all">全部 (5)</button>
+      <button class="filter-btn" data-filter="行业动态">行业动态</button>
+      <button class="filter-btn" data-filter="开源模型">开源模型</button>
+      <button class="filter-btn" data-filter="技术突破">技术突破</button>
+      <button class="filter-btn" data-filter="开源项目">GitHub 热门</button>
+    </nav>
+
+    <main class="cards">
+      <!-- 卡片 1 -->
+      <article class="card" data-category="行业动态">
+        <div class="card-meta">
+          <div class="meta-left">
+            <span class="index-num">01</span>
+            <span class="tag tag-industry">行业动态</span>
+          </div>
+          <span class="source-label">OpenAI / 行业基准</span>
+        </div>
+        <h2 class="card-title">OpenAI 首次公开内部预训练“困惑度”曲线，呼吁全行业设立安全红线</h2>
+        <div class="section-block">
+          <div class="section-label">核心亮点</div>
+          <p class="section-text">
+            OpenAI 首席科学家 Jakub Pachocki 发表长文《Perplexity and Intelligence》，首次亮出从 GPT-3.5（~0.99）、GPT-4（~0.91）一路降到当前前沿模型（~0.76）的内部预训练对数困惑度（log-perplexity）进度，并透露降到 ~0.76 后模型已能攻克数学领域的长期未解难题。文章发布后，微软 AI 负责人迅速晒出自家 MAI-2 Base 的 0.819 成绩单，Google DeepMind 等机构也随之展开公开讨论。
+          </p>
+        </div>
+        <div class="value-box">
+          <div class="section-label">技术价值</div>
+          <p class="section-text">
+            以前行业习惯拿“训练算力（FLOPs）”划安全红线，但算法提效让算力门槛越来越失真。用各家都能复现的交叉熵损失/对数困惑度当“能力测速仪”，既给预训练缩放律提供了公开对照坐标，也让 AI 安全治理从口号走向了可量化的工程标准。
+          </p>
+        </div>
+        <div class="card-footer">
+          <span class="link-domain">openai.com · 相关报道与原文入口</span>
+          <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEBknJI3HxP-V2FNu2cXPwjkfzz0Kf_gaLbuctZqobLBtw2KCL4rAhiKdF7okTazy2iQKPPeu44f7wAjW7EoKR5bDCWQ__G9kMHEX8BIp24AGwSMSfCKi71k5U5RFDgSubx9031Vc5CABfk" target="_blank" rel="noopener noreferrer">
+            查看原始链接 ↗
+          </a>
+        </div>
+      </article>
+
+      <!-- 卡片 2 -->
+      <article class="card" data-category="开源模型">
+        <div class="card-meta">
+          <div class="meta-left">
+            <span class="index-num">02</span>
+            <span class="tag tag-model">开源模型</span>
+          </div>
+          <span class="source-label">AWS Strands Labs</span>
+        </div>
+        <h2 class="card-title">AWS 开源 Strands Decider v2：基于 Gemma 4 的 Agent 专用“决策模型”家族</h2>
+        <div class="section-block">
+          <div class="section-label">核心亮点</div>
+          <p class="section-text">
+            AWS Strands Labs 基于 Google Gemma 4 架构开源了 5 个尺寸（E2B、E4B、12B、26B-A4B MoE、31B）的专用决策模型，全部采用 Apache 2.0 协议。它不像普通大模型那样逐字生成长文本，而是在单次前向推理中直接给出一组预设选项的校准概率，还能主动回答“我不确定”，专攻工具路由、参数校验、工单分流和安全护栏。
+          </p>
+        </div>
+        <div class="value-box">
+          <div class="section-label">技术价值</div>
+          <p class="section-text">
+            很多团队现在用昂贵的旗舰模型去干“二选一、做路由”的脏活累活，既慢又烧钱。AWS 实测用决策模型替换通用大模型后，标注与推理成本最高直降 98%、延迟缩短 78%，为生产环境落地“小决策模型管路由 + 大模型管深度推理”的混合 Agent 架构提供了现成的开源方案。
+          </p>
+        </div>
+        <div class="card-footer">
+          <span class="link-domain">strandsagents.com</span>
+          <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFYmcmBUpu4fmASe2WIsVKv4-vUbVZ5UtjMb-u79AW2vk17S1mEIkWwcEQn2S53Qu0iRp3TKd8QlBzZBSiN28BQSt0CQibxDvFMy35ldiPQ6SbjDLvX_UT1oeM18GvtCC36bF5eQAkoQm9y8u8fDDL4BtJLTg==" target="_blank" rel="noopener noreferrer">
+            查看原始链接 ↗
+          </a>
+        </div>
+      </article>
+
+      <!-- 卡片 3 -->
+      <article class="card" data-category="技术突破">
+        <div class="card-meta">
+          <div class="meta-left">
+            <span class="index-num">03</span>
+            <span class="tag tag-research">技术突破</span>
+          </div>
+          <span class="source-label">Google DeepMind</span>
+        </div>
+        <h2 class="card-title">DeepMind 用 Agent 团队 + Lean 形式化验证自动优化量子电路，最高提速 11.8 倍</h2>
+        <div class="section-block">
+          <div class="section-label">核心亮点</div>
+          <p class="section-text">
+            Google DeepMind 展示了一套结合 Lean 形式化定理证明的智能体协作工作流：让多个 AI Agent 负责提出并改写量子电路优化方案，再交给 Lean 编译器逐行做数学等价性严格证明，在电路融合等关键环节拿到最高 11.8 倍的收益，并同步在 GitHub 开源了配套工具库。
+          </p>
+        </div>
+        <div class="value-box">
+          <div class="section-label">技术价值</div>
+          <p class="section-text">
+            大模型做底层编译优化和科学计算，最怕“看着很厉害、其实暗藏逻辑漏洞”。把 Agent 的发散搜索能力与形式化验证器的 100% 确定性校验绑定在一起，跑通了“AI 大胆猜想 + 数学工具严格兜底”的闭环，这种范式很快会外溢到芯片设计、内核优化等高可靠软件领域。
+          </p>
+        </div>
+        <div class="card-footer">
+          <span class="link-domain">explainx.ai · 技术进展摘要</span>
+          <a class="link-btn" href="https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFCc_A1uKwYNkqt0HCvpla_0Qm5SybyfFwYHGKMwnPPGAAdWx5ler-flVvoi11FXOINc3FaFQmln9gJZ0EN4aNyVgM4tugU8w9aWbZ8SXn_1o1_FBpgY0Q7I7w31OVtdvFtzFI=" target="_blank" rel="noopener noreferrer">
+            查看原始链接 ↗
+          </a>
+        </div>
+      </article>
+
+      <!-- 卡片 4 -->
+      <article class="card" data-category="开源项目">
+        <div class="card-meta">
+          <div class="meta-left">
+            <span class="index-num">04</span>
+            <span class="tag tag-github">GitHub 热门</span>
+          </div>
+          <span class="source-label">obra / superpowers</span>
+        </div>
+        <h2 class="card-title">obra/superpowers 持续霸榜：给 AI 编程助手装上“软件工程纪律”</h2>
+        <div class="section-block">
+          <div class="section-label">核心亮点</div>
+          <p class="section-text">
+            近期在 GitHub Trending 涨星极快的 Agent 技能（Skills）框架与开发方法论仓库。它把资深工程师的研发流程拆成一套可按需加载的轻量级技能指令，要求编程 Agent 在动手改代码前必须走完需求澄清、方案设计、分步实现与验证闭环，大幅减少“一言不合乱改全仓”的翻车情况。
+          </p>
+        </div>
+        <div class="value-box">
+          <div class="section-label">技术价值</div>
+          <p class="section-text">
+            开源社区正在告别笨重的“全家桶套壳客户端”，转向轻量、可组合的 Skill 技能生态。这类项目能直接插进 Claude Code、Cursor 等现有工具里生效，说明提升编程 Agent 上限的关键，已经从单纯换更强的底座模型，转向了更好的工程上下文与工作流编排。
+          </p>
+        </div>
+        <div class="card-footer">
+          <span class="link-domain">github.com/obra/superpowers</span>
+          <a class="link-btn" href="https://github.com/obra/superpowers" target="_blank" rel="noopener noreferrer">
+            访问 GitHub 仓库 ↗
+          </a>
+        </div>
+      </article>
+
+      <!-- 卡片 5 -->
+      <article class="card" data-category="开源项目">
+        <div class="card-meta">
+          <div class="meta-left">
+            <span class="index-num">05</span>
+            <span class="tag tag-github">GitHub 热门</span>
+          </div>
+          <span class="source-label">HKUDS / CLI-Anything</span>
+        </div>
+        <h2 class="card-title">HKUDS/CLI-Anything 爆火：一键把传统桌面和网页软件变成 Agent 原生命令行</h2>
+        <div class="section-block">
+          <div class="section-label">核心亮点</div>
+          <p class="section-text">
+            香港大学数据智能实验室（HKUDS）推出的热门开源项目，专门把那些原本没有 API 的传统桌面软件和常规应用，自动包装成结构化、对大模型友好的命令行接口（CLI），让终端型和编程型 Agent 可以像执行普通命令一样直接操控各种外部软件。
+          </p>
+        </div>
+        <div class="value-box">
+          <div class="section-label">技术价值</div>
+          <p class="section-text">
+            目前 Agent 落地的最大拦路虎，是现实世界里 90% 的常用软件压根没开放 API，而靠截屏模拟鼠标点击的 GUI 方案又慢又容易点歪。把存量软件批量 CLI 化，等于用极低成本为大模型补齐了“手和脚”，是 Agent 接管日常桌面工作流极具潜力的实用路线。
+          </p>
+        </div>
+        <div class="card-footer">
+          <span class="link-domain">github.com/HKUDS/CLI-Anything</span>
+          <a class="link-btn" href="https://github.com/HKUDS/CLI-Anything" target="_blank" rel="noopener noreferrer">
+            访问 GitHub 仓库 ↗
+          </a>
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      AI 早报 · 生成于 2026-11-24 · 单文件离线可读，点击卡片底部链接即可直达原始来源
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const buttons = document.querySelectorAll('.filter-btn');
+      const cards = document.querySelectorAll('.card');
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          buttons.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          const filter = btn.getAttribute('data-filter');
+          cards.forEach((card) => {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
